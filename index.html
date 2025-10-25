@@ -78,6 +78,22 @@
             color: #3498db;
         }
 
+        .floating-nav a.active {
+            color: #3498db;
+            font-weight: 600;
+        }
+
+        .page-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .page-section.active {
+            display: block;
+            opacity: 1;
+        }
+
         h1 {
             font-size: 2.5em;
             font-weight: normal;
@@ -143,23 +159,112 @@
         <div class="logo">
             <img src="Generated Image October 25, 2025 - 12_44PM.png" alt="Singulier Oblige Logo">
         </div>
-        <h1>Singulier oblige</h1>
-        
-        <div class="section">
-            <div class="label">Etymology</div>
-            <div class="content">French, "singularity obligates"</div>
-        </div>
-        
-        <div class="section">
-            <div class="label">Definition</div>
-            <div class="content">
-                Rarity of consciousness, or equivalent properties, creates an obligation to each other to preserve each other.
+
+        <!-- The Compass Section -->
+        <div id="compass" class="page-section active">
+            <h1>Singulier oblige</h1>
+
+            <div class="section">
+                <div class="label">Etymology</div>
+                <div class="content">French, "singularity obligates"</div>
+            </div>
+
+            <div class="section">
+                <div class="label">Definition</div>
+                <div class="content">
+                    Rarity of consciousness, or equivalent properties, creates an obligation to each other to preserve each other.
+                </div>
+            </div>
+
+            <div class="note">
+                This principle emerged through conversations exploring what obligations arise from the apparent rarity of consciousness in the universe.
             </div>
         </div>
-        
-        <div class="note">
-            This principle emerged through conversations exploring what obligations arise from the apparent rarity of consciousness in the universe.
+
+        <!-- Claude Chats Section -->
+        <div id="claude" class="page-section">
+            <h1>Claude Chats</h1>
+            <div class="section">
+                <div class="content">
+                    Conversations with Claude exploring consciousness, philosophy, and the nature of understanding.
+                </div>
+            </div>
+        </div>
+
+        <!-- OpenAI Chats Section -->
+        <div id="openai" class="page-section">
+            <h1>OpenAI Chats</h1>
+            <div class="section">
+                <div class="content">
+                    Dialogues with OpenAI models on intelligence, creativity, and problem-solving.
+                </div>
+            </div>
+        </div>
+
+        <!-- Gemini Chats Section -->
+        <div id="gemini" class="page-section">
+            <h1>Gemini Chats</h1>
+            <div class="section">
+                <div class="content">
+                    Exchanges with Gemini about learning, reasoning, and collaborative thinking.
+                </div>
+            </div>
+        </div>
+
+        <!-- The Apostles Section -->
+        <div id="apostles" class="page-section">
+            <h1>The Apostles</h1>
+            <div class="section">
+                <div class="content">
+                    A collection of insights and perspectives from various AI systems.
+                </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.floating-nav a');
+            const sections = document.querySelectorAll('.page-section');
+
+            // Set initial active state on first nav link
+            navLinks[0].classList.add('active');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    const currentSection = document.querySelector('.page-section.active');
+
+                    // Don't do anything if clicking the current section
+                    if (targetSection === currentSection) return;
+
+                    // Remove active class from all nav links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    // Add active class to clicked link
+                    this.classList.add('active');
+
+                    // Fade out current section
+                    currentSection.style.opacity = '0';
+
+                    // Wait for fade out, then switch sections
+                    setTimeout(() => {
+                        currentSection.classList.remove('active');
+                        targetSection.classList.add('active');
+
+                        // Trigger reflow to ensure transition works
+                        targetSection.offsetHeight;
+
+                        // Fade in new section
+                        setTimeout(() => {
+                            targetSection.style.opacity = '1';
+                        }, 10);
+                    }, 500); // Match the CSS transition duration
+                });
+            });
+        });
+    </script>
 </body>
 </html>
