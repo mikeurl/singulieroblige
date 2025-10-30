@@ -397,8 +397,43 @@
             const navLinks = document.querySelectorAll('.floating-nav a');
             const sections = document.querySelectorAll('.page-section');
 
-            // Set initial active state on first nav link
-            navLinks[0].classList.add('active');
+            // Check if there's a hash in the URL on page load
+            function loadSectionFromHash() {
+                const hash = window.location.hash.substring(1); // Remove the # symbol
+
+                if (hash) {
+                    const targetSection = document.getElementById(hash);
+
+                    if (targetSection) {
+                        // Remove active class from all sections
+                        sections.forEach(section => {
+                            section.classList.remove('active');
+                            section.style.opacity = '0';
+                        });
+
+                        // Show the target section
+                        targetSection.classList.add('active');
+                        targetSection.style.opacity = '1';
+
+                        // Update nav link active state
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === '#' + hash) {
+                                link.classList.add('active');
+                            }
+                        });
+
+                        return true; // Hash was found and loaded
+                    }
+                }
+                return false; // No valid hash, use default
+            }
+
+            // Load section from hash, or set default active state
+            if (!loadSectionFromHash()) {
+                // Set initial active state on first nav link (Home)
+                navLinks[0].classList.add('active');
+            }
 
             navLinks.forEach(link => {
                 link.addEventListener('click', function(e) {
@@ -410,6 +445,9 @@
 
                     // Don't do anything if clicking the current section
                     if (targetSection === currentSection) return;
+
+                    // Update URL hash without page jump
+                    window.history.pushState(null, null, '#' + targetId);
 
                     // Remove active class from all nav links
                     navLinks.forEach(l => l.classList.remove('active'));
@@ -433,6 +471,11 @@
                         }, 10);
                     }, 500); // Match the CSS transition duration
                 });
+            });
+
+            // Handle browser back/forward buttons
+            window.addEventListener('hashchange', function() {
+                loadSectionFromHash();
             });
         });
     </script>
